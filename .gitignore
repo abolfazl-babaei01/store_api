@@ -1,0 +1,74 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Django migrations
+**/migrations/*
+!**/migrations/__init__.py
+
+# Static files
+static/
+
+# Media files (if you store uploads locally)
+media/
+media/products/
+media/products/images
+media/products/galleries
+# Environment variables
+.env
+*.env
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+log/
+logs/
+
+# Database files
+db.sqlite3
+*.sqlite3
+
+# Test output
+coverage/
+htmlcov/
+.tox/
+.nox/
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Compiled static files
+**/staticfiles/
+**/static/
+
+# Other caches
+*.cache
+*.mo
+*.pot
+
+# Security
+*.pem
+*.key
