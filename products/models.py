@@ -60,6 +60,8 @@ class Product(models.Model):
         overriding save method for product model.
         Price calculation after discount and save to new price field.
         """
+        if self.off == 0:
+            self.new_price = self.price
         self.new_price = self.price - self.off
         super().save(*args, **kwargs)
 
