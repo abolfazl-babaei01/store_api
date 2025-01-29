@@ -29,6 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
+    # Django Default Apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -36,14 +37,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # My Apps
     'accounts.apps.AccountsConfig',
     'products.apps.ProductsConfig',
     'cart.apps.CartConfig',
-
+    'order.apps.OrderConfig',
+    # RestFramework Apps
     'rest_framework',
     'drf_spectacular',
     'rest_framework_simplejwt',
-
+    # External Apps
     'django_cleanup',
 
 ]
