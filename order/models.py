@@ -21,6 +21,7 @@ class Order(models.Model):
     address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='address')
     status = models.CharField(max_length=10, choices=OrderStatus.choices, default=OrderStatus.pending)
     total_price = models.PositiveBigIntegerField(default=0)
+    is_paid = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
