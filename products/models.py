@@ -1,6 +1,6 @@
 from django.db import models
 from accounts.models import CustomUser
-from django.shortcuts import reverse
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Create your models here.
 
@@ -40,6 +40,11 @@ class Product(models.Model):
     weight = models.PositiveIntegerField(default=0)
     off = models.PositiveIntegerField(default=0)  # amount of discount
     new_price = models.PositiveIntegerField(default=0)  # price after discount (calculated automatic)
+
+    rating = models.PositiveIntegerField(null=True, blank=True,
+                                         validators=[MinValueValidator(1), MaxValueValidator(5)]
+                                         )
+
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

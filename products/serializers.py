@@ -97,4 +97,4 @@ class ProductDetailSerializer(serializers.ModelSerializer):
             'id', 'category', 'image',
             'name', 'slug',
             'description', 'inventory', 'price',
-            'off', 'new_price', 'created', 'updated', 'futures', 'galleries', 'comments']
+            'off', 'new_price','rating', 'created', 'updated', 'futures', 'galleries', 'comments']
