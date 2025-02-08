@@ -72,3 +72,5 @@ Thumbs.db
 # Security
 *.pem
 *.key
+
+info.txt

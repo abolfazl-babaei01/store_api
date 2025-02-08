@@ -9,6 +9,7 @@ class AddressSerializer(serializers.ModelSerializer):
     """
     Serializer for Address model, Create new address for user
     """
+
     class Meta:
         model = Address
         fields = ['id', 'user', 'province', 'city', 'postal_code', 'street_or_residence']
@@ -17,7 +18,7 @@ class AddressSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        validated_data['user'] = self.context['request'].user # add current user in to address
+        validated_data['user'] = self.context['request'].user  # add current user in to address
         return super().create(validated_data)
 
 
@@ -91,8 +92,25 @@ class OTPVerifySerializer(OTPVerificationBaseSerializer):
     Handles OTP verification and user creation.
     """
 
+    password = serializers.CharField(
+        write_only=True,
+        max_length=8,
+        required=False
+    )
+
     def create(self, validated_data):
-        user, created = CustomUser.objects.get_or_create(phone=validated_data["phone"])
+        password = validated_data.pop('password', None)
+        user = CustomUser.objects.filter(phone=validated_data["phone"]).first()
+
+        if not user:
+            if not password:
+                raise serializers.ValidationError({'Error': 'password is required for registration'})
+
+            # create new user
+            user = CustomUser.objects.create_user(
+                phone=validated_data.get('phone'),
+                password=password)
+
         self.otp_verification.delete()  # Removed the used OTP instance
         return user
 
@@ -104,15 +122,31 @@ class ResetPasswordSerializer(OTPVerificationBaseSerializer):
     Validates the new password and updates the user's password upon successful OTP verification.
     """
     new_password = serializers.CharField()
+    old_password = serializers.CharField()
 
-    def validated(self, data):
-        super().validated_data(data)
+    def get_user(self, data):
+        user = CustomUser.objects.get(phone=data.get('phone'))
+        if not user:
+            raise serializers.ValidationError({'Error': 'user does not exist'})
+        return user
 
-        password_validation.validate_password(data['new_password'])  # validate provided new password
+    def validate(self, data):
+        data = super().validate(data)
+        user = self.get_user(data)
+        print(user)
+
+
+
+        password_validation.validate_password(data.get('new_password'))  # validate provided new password
+
+        if not user.check_password(data.get('old_password')):
+            raise serializers.ValidationError({'Error': 'invalid old password'})
+
         return data
 
     def save(self):
-        user = CustomUser.objects.get(phone=self.validated_data["phone"], is_active=True)
+        user = self.get_user(self.validated_data)
+
         user.set_password(self.validated_data["new_password"])  # hashed password and set for current user
         user.save()
         self.otp_verification.delete()  # Removed the used otp
