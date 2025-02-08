@@ -6,6 +6,9 @@ from .models import OTP, CustomUser, Address
 
 
 class AddressSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Address model, Create new address for user
+    """
     class Meta:
         model = Address
         fields = ['id', 'user', 'province', 'city', 'postal_code', 'street_or_residence']
