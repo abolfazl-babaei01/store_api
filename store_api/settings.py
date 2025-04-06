@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'products.apps.ProductsConfig',
     'cart.apps.CartConfig',
     'order.apps.OrderConfig',
+    'ticket.apps.TicketConfig',
     # RestFramework Apps
     'rest_framework',
     'drf_spectacular',

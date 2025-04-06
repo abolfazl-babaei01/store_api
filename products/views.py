@@ -1,8 +1,8 @@
 from rest_framework import generics
-
 from rest_framework.permissions import AllowAny
 from .models import Product, Category, ProductFuture, ProductGallery, ProductComment
-from .serializers import (ProductListSerializer, ProductDetailSerializer, CategorySerializer, ProductFutureSerializer, ProductGallerySerializer,
+from .serializers import (ProductListSerializer, ProductDetailSerializer, CategorySerializer, ProductFutureSerializer,
+                          ProductGallerySerializer,
                           ProductCommentCreateSerializer)
 
 from .paginations import BasePagination

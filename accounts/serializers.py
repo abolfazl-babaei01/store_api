@@ -9,6 +9,7 @@ class AddressSerializer(serializers.ModelSerializer):
     """
     Serializer for Address model, Create new address for user
     """
+    user = serializers.StringRelatedField()
 
     class Meta:
         model = Address
@@ -133,7 +134,6 @@ class ResetPasswordSerializer(OTPVerificationBaseSerializer):
     def validate(self, data):
         data = super().validate(data)
         user = self.get_user(data)
-        print(user)
 
 
 
