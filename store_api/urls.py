@@ -31,6 +31,8 @@ urlpatterns = [
     path('cart/', include('cart.urls', namespace='cart')),
     path('', include('order.urls', namespace='order')), # order
     path('', include('ticket.urls', namespace='ticket')), # ticket
+
+    path('notifications/', include('notifications.urls', namespace='notifications')),
 ]
 
 # drf_spectacular urls
