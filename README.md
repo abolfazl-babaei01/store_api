@@ -22,7 +22,7 @@ Follow the steps below to set up and run the project locally:
 
 ```bash
 git clone https://github.com/abolfazl-babaei01/store_api.git
-cd your-repo-name
+cd store_api
 ```
 
 2. **Create a virtual environment:**
