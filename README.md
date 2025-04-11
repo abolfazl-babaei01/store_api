@@ -28,7 +28,7 @@ cd store_api
 2. **Create a virtual environment:**
 
 ```bash
-py -3.12 -m venv en
+py -3.12 -m venv venv
 ```
 
 Or Use this :
