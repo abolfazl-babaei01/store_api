@@ -6,18 +6,19 @@ from utils.validators import phone_regex
 from accounts.models import Address
 from cart.models import Cart
 
+
 class OrderItemSerializer(serializers.ModelSerializer):
     """
     Serializes order items, including product details, quantity, and price.
     """
     product = ProductListSerializer()
+
     class Meta:
         model = OrderItem
         fields = ['id', 'product', 'quantity', 'price']
 
 
 class OrderSerializer(serializers.ModelSerializer):
-
     """
     Serializes order details, including buyer info, address, items, and total price.
     """
@@ -27,11 +28,10 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['id', 'buyer', 'first_name', 'last_name', 'phone', 'status', 'address', 'items'
-            , 'total_price', 'created']
+            , 'total_price', 'is_paid', 'created']
 
 
 class CreateOrderSerializer(serializers.Serializer):
-
     """
     Serializer for creating an order.
     - Validates the provided address to ensure it belongs to the requesting user.
@@ -39,7 +39,6 @@ class CreateOrderSerializer(serializers.Serializer):
     - Creates an order and its related order items.
     - Calculates and assigns the total order price.
     """
-
 
     first_name = serializers.CharField(max_length=200, required=True)
     last_name = serializers.CharField(max_length=200, required=True)
@@ -52,7 +51,7 @@ class CreateOrderSerializer(serializers.Serializer):
             address = Address.objects.get(pk=data['address_id'], user=user)
         except Address.DoesNotExist:
             raise serializers.ValidationError('Address does not exist')
-        data['address'] = address # the add validated address in data
+        data['address'] = address  # the add validated address in data
         return data
 
     def create(self, validated_data):
@@ -62,8 +61,8 @@ class CreateOrderSerializer(serializers.Serializer):
             raise serializers.ValidationError('cart not found or cart is empty')
 
         order = Order.objects.create(buyer=user, address=validated_data['address'],
-                                     first_name=validated_data['first_name'],last_name=validated_data['last_name'],
-                                     phone=validated_data['phone'],)
+                                     first_name=validated_data['first_name'], last_name=validated_data['last_name'],
+                                     phone=validated_data['phone'], )
         total_price = 0
 
         for item in cart.items.all():

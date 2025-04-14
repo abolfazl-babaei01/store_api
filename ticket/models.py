@@ -1,6 +1,5 @@
 from django.db import models
 from accounts.models import CustomUser
-
 # Create your models here.
 
 
@@ -14,10 +13,13 @@ class Ticket(models.Model):
         related_name='tickets'  # Reverse relation: user.tickets.all()
     )
     subject = models.CharField(max_length=100)  # Subject/title of the ticket
+    is_blocked = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+
 
     def __str__(self):
         return f'{self.subject} by {self.user}'
+
 
     class Meta:
         ordering = ['-created_at']

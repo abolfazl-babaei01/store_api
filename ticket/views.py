@@ -1,4 +1,6 @@
 from rest_framework import generics, permissions
+from rest_framework.generics import ListAPIView
+
 from .models import Ticket
 from .serializers import (
     TicketCreateSerializer,
@@ -7,6 +9,8 @@ from .serializers import (
     TicketMessageCreateSerializer
 )
 
+# services
+from .services import auto_block_ticket
 
 class UserTicketListView(generics.ListAPIView):
     """
@@ -17,7 +21,12 @@ class UserTicketListView(generics.ListAPIView):
     lookup_field = 'pk'
 
     def get_queryset(self):
-        return Ticket.objects.filter(user=self.request.user)
+        query_set = Ticket.objects.filter(user=self.request.user)
+
+        for ticket in Ticket.objects.filter(user=self.request.user, is_blocked=False):
+            auto_block_ticket(ticket)
+
+        return query_set
 
 
 class TicketDetailView(generics.RetrieveAPIView):

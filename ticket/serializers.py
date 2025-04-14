@@ -14,7 +14,7 @@ class TicketListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket
-        fields = ['id', 'subject', 'created_at', 'detail_url']
+        fields = ['id', 'subject', 'is_blocked', 'created_at', 'detail_url']
 
 
 class TicketMessageSerializer(serializers.ModelSerializer):
@@ -90,6 +90,10 @@ class TicketMessageCreateSerializer(serializers.ModelSerializer):
 
         if ticket.user != user:
             raise serializers.ValidationError('You do not have permission to reply to this ticket.')
+
+        # check ticket is blocked or no
+        if ticket.is_blocked:
+            raise serializers.ValidationError('This ticket is blocked.')
 
         return data
 
