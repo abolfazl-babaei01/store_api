@@ -73,4 +73,39 @@ python manage.py migrate
 ```bash
 python manage.py runserver
 ```
+## 📚 API Documentation
+
+This project includes interactive and auto-generated API documentation using **Swagger UI** and **Redoc**.
+
+After running the server, you can access the documentation at the following URLs:
+
+- **Swagger UI**:  
+  [http://localhost:8000/schema/swagger-ui/](http://localhost:8000/schema/swagger-ui/)
+
+- **Redoc**:  
+  [http://localhost:8000/schema/redoc/](http://localhost:8000/schema/redoc/)
+
+These interfaces allow you to explore, test, and understand all available endpoints and their request/response formats.
+They are extremely helpful for both frontend developers and API testers.
+
+## 👤 Create a Superuser (Admin)
+
+To create an admin user (superuser), run the following command:
+
+```bash
+python manage.py createsuperuser
+```
+- **You will be prompted to enter a username and password.**
+- **💡 Note: Email address is optional (you can skip it).**
+
+This user is essential for accessing Django’s built-in admin panel, where you can manage your models (like users, products, etc.) through a user-friendly web interface.
+
+After creating the superuser, start the development server if it's not already running:
+```bash
+python manage.py runserver
+```
+- **Admin panel**:
+  [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
+
+and log in with the credentials you created.
 
