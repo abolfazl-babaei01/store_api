@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     # External Apps
     'django_cleanup',
+    'django_filters',
     # cors
     "corsheaders",
 

@@ -22,8 +22,8 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug', 'category', 'off', 'new_price', 'price', 'show_image']
-    inlines = [ProductGalleryInline, ProductFutureInline]
+    list_display = ('name', 'slug', 'category', 'off', 'new_price', 'price', 'inventory', 'show_image')
+    inlines = (ProductGalleryInline, ProductFutureInline)
 
     def show_image(self, obj):
         if obj.image:

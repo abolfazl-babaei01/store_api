@@ -6,7 +6,8 @@ from .serializers import (ProductListSerializer, ProductDetailSerializer, Catego
                           ProductCommentCreateSerializer)
 
 from .paginations import BasePagination
-
+from .filters import ProductFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
 # Create your views here.
 
@@ -20,6 +21,8 @@ class ProductListView(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductListSerializer
     pagination_class = BasePagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ProductFilter
 
 
 class ProductDetailView(generics.RetrieveAPIView):
