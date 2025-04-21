@@ -7,6 +7,7 @@ class CategorySerializer(serializers.ModelSerializer):
     Serializer for Category model.
     This serializer provides all fields of the Category model.
     """
+    parent = serializers.StringRelatedField(read_only=True) # show display name
 
     class Meta:
         model = Category

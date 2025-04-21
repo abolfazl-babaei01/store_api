@@ -16,7 +16,8 @@ class ProductFutureInline(admin.TabularInline):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug']
+    list_display = ('name', 'slug', 'parent')
+    list_editable = ('parent', )
 
 
 @admin.register(Product)
