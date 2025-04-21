@@ -13,23 +13,29 @@ from .models import CustomUser, Address
 # Create your views here.
 
 
-class UserProfileView(APIView):
+class UserProfileDetailView(generics.RetrieveAPIView):
     """
-        API view for retrieving and updating the authenticated user's profile.
+    API view to retrieve the authenticated user's profile.
     """
+    serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        user = get_object_or_404(CustomUser, pk=request.user.id)
-        serializer = UserProfileSerializer(instance=user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    def get_object(self):
+        return self.request.user
 
-    def put(self, request):
-        user = get_object_or_404(CustomUser, pk=request.user.id)
-        serializer = UserProfileSerializer(instance=user, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
+class UserProfileUpdateView(generics.UpdateAPIView):
+    """
+    API view to update the authenticated user's profile.
+    """
+    serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_serializer(self, *args, **kwargs):
+        kwargs['partial'] = True
+        return super().get_serializer(*args, **kwargs)
+
+    def get_object(self):
+        return self.request.user
 
 
 class AddressViewSet(viewsets.ViewSet):

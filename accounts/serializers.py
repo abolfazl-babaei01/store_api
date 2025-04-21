@@ -27,11 +27,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
     """
         Serializer for user profile, managing personal details and read-only fields.
     """
-    addresses = AddressSerializer(many=True, read_only=True)
 
     class Meta:
         model = CustomUser
-        fields = ['phone', 'first_name', 'last_name', 'date_joined', 'addresses']
+        fields = ['phone', 'first_name', 'last_name', 'date_joined']
         extra_kwargs = {
             'phone': {'read_only': True},
             'date_joined': {'read_only': True},
