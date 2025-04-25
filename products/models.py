@@ -25,6 +25,18 @@ class Category(models.Model):
         verbose_name_plural = 'Categories'
 
 
+class Brand(models.Model):
+    name = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=200, unique=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Brand'
+        verbose_name_plural = 'Brands'
+
 class Product(models.Model):
     """
     Product model.
@@ -32,6 +44,7 @@ class Product(models.Model):
 
     """
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products') # product category . . .
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name='products', null=True, blank=True)
     image = models.ImageField(upload_to='products/images/')  # first image , show in products list
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True)
@@ -45,6 +58,8 @@ class Product(models.Model):
     rating = models.PositiveIntegerField(null=True, blank=True,
                                          validators=[MinValueValidator(1), MaxValueValidator(5)]
                                          )
+
+    color_code = models.CharField(max_length=7, default='#FFFFFF')
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, ProductGallery, ProductFuture, ProductComment
+from .models import Category, Product, ProductGallery, ProductFuture, ProductComment, Brand
 from django.utils.html import mark_safe
 
 # Register your models here.
@@ -35,4 +35,8 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(ProductComment)
 class ProductCommentAdmin(admin.ModelAdmin):
-    list_display = ['name', 'product', 'status']
+    list_display = ('name', 'product', 'status')
+
+@admin.register(Brand)
+class ProductBrandAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug', 'is_active')

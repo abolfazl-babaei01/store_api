@@ -1,9 +1,9 @@
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
-from .models import Product, Category, ProductFuture, ProductGallery, ProductComment
+from .models import Product, Category, ProductFuture, ProductGallery, ProductComment, Brand
 from .serializers import (ProductListSerializer, ProductDetailSerializer, CategorySerializer, ProductFutureSerializer,
                           ProductGallerySerializer,
-                          ProductCommentCreateSerializer)
+                          ProductCommentCreateSerializer, BrandSerializer)
 
 from .paginations import BasePagination
 from .filters import ProductFilter
@@ -46,6 +46,15 @@ class CategoryListView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     pagination_class = BasePagination
+
+class BrandListView(generics.ListAPIView):
+    """
+    This View provides a list of all brands.
+    Supported methods: [GET]
+    """
+    permission_classes = [AllowAny]
+    queryset = Brand.objects.filter(is_active=True)
+    serializer_class = BrandSerializer
 
 
 class ProductFutureListView(generics.ListAPIView):

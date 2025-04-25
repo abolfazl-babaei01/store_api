@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from products.models import Category, Product, ProductFuture, ProductGallery, ProductComment
+from products.models import Category, Product, ProductFuture, ProductGallery, ProductComment, Brand
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -12,6 +12,18 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = '__all__'
+
+
+class BrandSerializer(serializers.ModelSerializer):
+
+    """
+    serializer for Brand model.
+    This serializer provides all fields of the Brand model.
+    """
+
+    class Meta:
+        model = Brand
+        fields = ['name', 'slug']
 
 
 class ProductFutureSerializer(serializers.ModelSerializer):
@@ -91,12 +103,12 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     galleries = ProductGallerySerializer(many=True, read_only=True)  # this filed for display product galleries
     category = serializers.StringRelatedField()  # uses a StringRelatedField to display the category name
     comments = ProductCommentListSerializer(many=True, read_only=True)  # this filed for display product comments
+    brand = serializers.StringRelatedField()
 
     class Meta:
         model = Product
 
-        fields = [
-            'id', 'category', 'image',
+        fields = [ 'id', 'category','brand', 'image',
             'name', 'slug',
             'description', 'inventory', 'price',
             'off', 'new_price','rating', 'created', 'updated', 'futures', 'galleries', 'comments']
