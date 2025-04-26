@@ -20,6 +20,7 @@ urlpatterns = [
     path('profile/update/', views.UserProfileUpdateView.as_view(), name='user-profile-update'),
     path('reset-password/', views.ResetPasswordView.as_view(), name='reset_password'),
     path('change-phone/', views.ChangePhoneNumberView.as_view(), name='change_phone'),
+    path('latest-comments/', views.UserCommentsView.as_view(), name='latest_comments'),
 
 ]
 

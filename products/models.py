@@ -123,6 +123,7 @@ class ProductComment(models.Model):
     """
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='comments')
     name = models.CharField(max_length=50)
     body = models.TextField(max_length=500)
     star = models.PositiveIntegerField(null=True, blank=True,
@@ -131,7 +132,7 @@ class ProductComment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return f'{self.name} - {self.user}'
 
     class Meta:
         ordering = ['-created']

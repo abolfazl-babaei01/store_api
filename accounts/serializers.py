@@ -39,6 +39,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         }
 
 
+
 class OTPVerificationBaseSerializer(serializers.Serializer):
     """
     Base serializer for verifying OTP codes with phone numbers and reset password and change phone number.

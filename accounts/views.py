@@ -8,6 +8,7 @@ from .serializers import (OTPRequestSerializer, OTPVerifySerializer, UserProfile
                           ChangePhoneNumberSerializer,
                           AddressSerializer)
 from .models import CustomUser, Address
+from products.serializers import ProductCommentListSerializer
 
 
 # Create your views here.
@@ -23,6 +24,7 @@ class UserProfileDetailView(generics.RetrieveAPIView):
     def get_object(self):
         return self.request.user
 
+
 class UserProfileUpdateView(generics.UpdateAPIView):
     """
     API view to update the authenticated user's profile.
@@ -36,6 +38,16 @@ class UserProfileUpdateView(generics.UpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+class UserCommentsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        latest_comments = user.comments.all()[:4]
+        serializer = ProductCommentListSerializer(instance=latest_comments, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class AddressViewSet(viewsets.ViewSet):

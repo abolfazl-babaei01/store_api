@@ -1,5 +1,5 @@
 from rest_framework import generics
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import Product, Category, ProductFuture, ProductGallery, ProductComment, Brand
 from .serializers import (ProductListSerializer, ProductDetailSerializer, CategorySerializer, ProductFutureSerializer,
                           ProductGallerySerializer,
@@ -84,6 +84,9 @@ class ProductCommentCreateView(generics.CreateAPIView):
     """
     throttle_scope = 'comment'  # two request in one hour
 
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     serializer_class = ProductCommentCreateSerializer
     queryset = ProductComment.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

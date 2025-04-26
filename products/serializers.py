@@ -60,6 +60,7 @@ class ProductCommentCreateSerializer(serializers.ModelSerializer):
         fields = ['product', 'name', 'body', 'star']
 
 
+
 class ProductCommentListSerializer(serializers.ModelSerializer):
     """
     Serializer for the ProductComment model.
