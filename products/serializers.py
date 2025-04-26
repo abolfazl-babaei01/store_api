@@ -7,7 +7,7 @@ class CategorySerializer(serializers.ModelSerializer):
     Serializer for Category model.
     This serializer provides all fields of the Category model.
     """
-    parent = serializers.StringRelatedField(read_only=True) # show display name
+    parent = serializers.StringRelatedField(read_only=True)  # show display name
 
     class Meta:
         model = Category
@@ -15,7 +15,6 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class BrandSerializer(serializers.ModelSerializer):
-
     """
     serializer for Brand model.
     This serializer provides all fields of the Brand model.
@@ -58,7 +57,7 @@ class ProductCommentCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductComment
-        fields = ['product', 'name', 'body']
+        fields = ['product', 'name', 'body', 'star']
 
 
 class ProductCommentListSerializer(serializers.ModelSerializer):
@@ -82,7 +81,7 @@ class ProductListSerializer(serializers.ModelSerializer):
     category = serializers.StringRelatedField()
     detail_url = serializers.HyperlinkedIdentityField(
         view_name='products:product_detail',
-        lookup_field='slug') # This field is for displaying product details
+        lookup_field='slug')  # This field is for displaying product details
 
     class Meta:
         model = Product
@@ -93,7 +92,6 @@ class ProductListSerializer(serializers.ModelSerializer):
 
 
 class ProductDetailSerializer(serializers.ModelSerializer):
-
     """
     Serializer for the Product model.
     This Serializer for product detail and display all fields of the Product model.
@@ -102,13 +100,28 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     futures = ProductFutureSerializer(many=True, read_only=True)  # this filed for display product feature
     galleries = ProductGallerySerializer(many=True, read_only=True)  # this filed for display product galleries
     category = serializers.StringRelatedField()  # uses a StringRelatedField to display the category name
-    comments = ProductCommentListSerializer(many=True, read_only=True)  # this filed for display product comments
-    brand = serializers.StringRelatedField()
+    comments = serializers.SerializerMethodField()
+    brand = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
 
-        fields = [ 'id', 'category','brand', 'image',
-            'name', 'slug',
-            'description', 'inventory', 'price',
-            'off', 'new_price','rating', 'created', 'updated', 'futures', 'galleries', 'comments']
+        fields = ['id', 'category', 'brand', 'image',
+                  'name', 'slug',
+                  'description', 'inventory', 'price',
+                  'off', 'new_price', 'rating', 'created', 'updated', 'futures', 'galleries', 'comments']
+
+    def get_comments(self, obj):
+        """
+        Return active comments related to the product.
+        """
+        result = obj.comments.filter(status=True)
+        return ProductCommentListSerializer(instance=result, many=True).data
+
+    def get_brand(self, obj):
+        """
+        Return the brand details if the brand is active.
+        """
+        if obj.brand.is_active:
+            return BrandSerializer(instance=obj.brand).data
+        return None
