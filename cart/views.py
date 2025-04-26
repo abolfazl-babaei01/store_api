@@ -1,6 +1,6 @@
 from .models import Cart
 from .serializers import (CartSerializer, UpdateCartSerializer)
-from rest_framework import viewsets, status, views
+from rest_framework import viewsets, status, views, permissions
 from rest_framework.response import Response
 
 
@@ -12,6 +12,7 @@ class CartViewSet(viewsets.ViewSet):
     ViewSet for managing the user's cart.
     Retrieves and returns the list of items in the user's cart.
     """
+    permission_classes = [permissions.IsAuthenticated]
 
     def list(self, request):
         cart = Cart.objects.filter(user=request.user)
@@ -23,6 +24,7 @@ class UpdateCartView(views.APIView):
     API view for adding, updating, or removing items from the user's cart.
     Ensures the cart exists and updates it based on the request data.
     """
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         cart, _ = Cart.objects.get_or_create(user=request.user)

@@ -9,9 +9,12 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['phone', 'total_price', 'is_paid', 'status', 'formating_created_date']
-    list_editable = ['status']
-    inlines = [OrderItemInline]
+    list_display = ('phone', 'total_price', 'is_paid', 'status', 'formating_created_date')
+    list_editable = ('status', )
+    inlines = (OrderItemInline, )
+    search_fields = ('order_code', )
+    list_filter = ('status', 'is_paid')
+    list_per_page = 20
 
     def formating_created_date(self, obj):
         return obj.created.strftime('%Y/%m/%d | %H:%M')
