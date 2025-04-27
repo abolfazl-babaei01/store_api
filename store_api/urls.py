@@ -22,27 +22,23 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, Spec
 from django.conf import settings
 from django.conf.urls.static import static
 
-
 # apps urls
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include('accounts.urls', namespace='accounts')),
-    path('products/', include('products.urls', namespace='products')),
-    path('cart/', include('cart.urls', namespace='cart')),
-    path('', include('order.urls', namespace='order')), # order
-    path('', include('ticket.urls', namespace='ticket')), # ticket
-
-    path('notifications/', include('notifications.urls', namespace='notifications')),
+    path('api/accounts/', include('accounts.urls', namespace='accounts')),
+    path('api/products/', include('products.urls', namespace='products')),
+    path('api/cart/', include('cart.urls', namespace='cart')),
+    path('api/orders/', include('order.urls', namespace='order')),  # order
+    path('api/tickets/', include('ticket.urls', namespace='ticket')),  # ticket
+    path('api/notifications/', include('notifications.urls', namespace='notifications')),
 ]
 
 # drf_spectacular urls
 urlpatterns += [
-    path('schema/', SpectacularAPIView.as_view(), name='schema'),
-    # Optional UI:
-    path('schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-    path('schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]
-
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
