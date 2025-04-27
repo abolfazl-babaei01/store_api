@@ -81,7 +81,7 @@ class ProductListSerializer(serializers.ModelSerializer):
 
     category = serializers.StringRelatedField()
     detail_url = serializers.HyperlinkedIdentityField(
-        view_name='products:product_detail',
+        view_name='products:product-detail',
         lookup_field='slug')  # This field is for displaying product details
 
     class Meta:

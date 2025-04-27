@@ -17,8 +17,17 @@ class OrderItemSerializer(serializers.ModelSerializer):
         model = OrderItem
         fields = ['id', 'product', 'quantity', 'price']
 
+class OrderListSerializer(serializers.ModelSerializer):
 
-class OrderSerializer(serializers.ModelSerializer):
+    """
+    """
+
+    class Meta:
+        model = Order
+        fields = ('id', 'order_code', 'status', 'is_paid', 'total_price')
+
+
+class OrderDetailSerializer(serializers.ModelSerializer):
     """
     Serializes order details, including buyer info, address, items, and total price.
     """
