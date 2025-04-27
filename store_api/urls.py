@@ -31,6 +31,8 @@ urlpatterns = [
     path('api/orders/', include('order.urls', namespace='order')),  # order
     path('api/tickets/', include('ticket.urls', namespace='ticket')),  # ticket
     path('api/notifications/', include('notifications.urls', namespace='notifications')),
+
+    path('api/info/', include('info.urls', namespace='info')),
 ]
 
 # drf_spectacular urls
