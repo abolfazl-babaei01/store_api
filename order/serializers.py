@@ -17,9 +17,11 @@ class OrderItemSerializer(serializers.ModelSerializer):
         model = OrderItem
         fields = ['id', 'product', 'quantity', 'price']
 
-class OrderListSerializer(serializers.ModelSerializer):
 
+class OrderListSerializer(serializers.ModelSerializer):
     """
+    Serializes a summary of the user's orders.
+    Includes basic order information such as status and total price.
     """
 
     class Meta:

@@ -11,6 +11,9 @@ from cart.models import Cart
 
 
 class OrderListView(generics.ListAPIView):
+    """
+    Lists all orders placed by the authenticated user.
+    Only orders belonging to the current user are returned."""
     serializer_class = OrderListSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -19,13 +22,22 @@ class OrderListView(generics.ListAPIView):
 
 
 class OrderDetailView(generics.RetrieveAPIView):
+    """
+    Retrieves detailed information about a specific order.
+    Ensures that the order belongs to the authenticated user.
+    """
     serializer_class = OrderDetailSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return Order.objects.filter(buyer=self.request.user).all()
 
+
 class CreateOrderView(views.APIView):
+    """
+    Handles the creation of a new order by the authenticated user.
+    Validates and saves order data within a transaction.
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     @transaction.atomic
