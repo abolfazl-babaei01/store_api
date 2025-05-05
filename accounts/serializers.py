@@ -3,6 +3,8 @@ from rest_framework.fields import empty
 from utils.validators import phone_regex
 from django.contrib.auth import password_validation
 from .models import OTP, CustomUser, Address
+from products.models import Product
+from products.serializers import ProductListSerializer
 
 
 class AddressSerializer(serializers.ModelSerializer):
@@ -37,7 +39,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'first_name': {'required': True},
             'last_name': {'required': True},
         }
-
 
 
 class OTPVerificationBaseSerializer(serializers.Serializer):
@@ -135,8 +136,6 @@ class ResetPasswordSerializer(OTPVerificationBaseSerializer):
         data = super().validate(data)
         user = self.get_user(data)
 
-
-
         password_validation.validate_password(data.get('new_password'))  # validate provided new password
 
         if not user.check_password(data.get('old_password')):
@@ -169,3 +168,25 @@ class ChangePhoneNumberSerializer(OTPVerificationBaseSerializer):
         user.save()
         self.otp_verification.delete()
         return user
+
+
+class FavoriteProductActionSerializer(serializers.Serializer):
+    product_id = serializers.IntegerField()
+
+    def validate_product_id(self, value):
+        try:
+            product = Product.objects.get(id=value)
+        except Product.DoesNotExist:
+            raise serializers.ValidationError("product does not exist.")
+        return value
+
+
+class FavoriteProductListSerializer(serializers.ModelSerializer):
+    category = serializers.StringRelatedField()
+    detail_url = serializers.HyperlinkedIdentityField(
+        view_name='products:product-detail',
+        lookup_field='slug')  # This field is for displaying product details
+
+    class Meta:
+        model = Product
+        fields = ProductListSerializer.Meta.fields

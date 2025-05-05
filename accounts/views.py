@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status, generics, viewsets
@@ -6,10 +7,11 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import (OTPRequestSerializer, OTPVerifySerializer, UserProfileSerializer, ResetPasswordSerializer,
                           ChangePhoneNumberSerializer,
-                          AddressSerializer)
+                          AddressSerializer, FavoriteProductActionSerializer, FavoriteProductListSerializer)
 from .models import CustomUser, Address
-from products.serializers import ProductCommentListSerializer
 
+from products.serializers import ProductCommentListSerializer
+from products.models import Product
 
 # Create your views here.
 
@@ -169,3 +171,32 @@ class ChangePhoneNumberView(generics.GenericAPIView):
         context = super().get_serializer_context()
         context['request'] = self.request
         return context
+
+
+class FavoriteProductToggleAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = FavoriteProductActionSerializer(data=request.data)
+        if serializer.is_valid():
+            product_id = serializer.validated_data['product_id']
+            product = Product.objects.get(id=product_id)
+            user = request.user
+
+            if product in user.favorite_products.all():
+                user.favorite_products.remove(product)
+                return Response({'message': 'removed to favorite products'}, status=status.HTTP_200_OK)
+            else:
+                user.favorite_products.add(product)
+                return Response({'message': 'added to favorite products'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class FavoriteProductListAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        favorite_products = user.favorite_products.all()
+        serializer = FavoriteProductListSerializer(favorite_products, many=True, context={'request': request})
+        return Response(serializer.data)

@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils import timezone
 from django.utils.timezone import now
 from datetime import timedelta
+
 from .managers import CustomUserManager
 from utils.validators import phone_regex
 
@@ -68,6 +69,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
+
+    favorite_products = models.ManyToManyField('products.Product', blank=True, related_name='liked_by')
 
     USERNAME_FIELD = 'phone'
     REQUIRED_FIELDS = []

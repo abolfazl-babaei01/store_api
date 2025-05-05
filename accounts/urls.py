@@ -6,7 +6,6 @@ from rest_framework.routers import SimpleRouter
 router = SimpleRouter()
 router.register('addresses', views.AddressViewSet, basename='address')
 
-
 app_name = 'accounts'
 
 urlpatterns = [
@@ -29,8 +28,9 @@ urlpatterns = [
 
     # User Activity
     path('profile/latest-comments/', views.UserCommentsView.as_view(), name='profile-latest-comments'),
+    path('favorites/toggle/', views.FavoriteProductToggleAPIView.as_view(), name='favorite-toggle'),
+    path('profile/favorites/', views.FavoriteProductListAPIView.as_view(), name='favorite-list'),
 
 ]
 
 urlpatterns += router.urls
-
