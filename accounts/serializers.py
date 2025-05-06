@@ -5,6 +5,7 @@ from django.contrib.auth import password_validation
 from .models import OTP, CustomUser, Address
 from products.models import Product
 from products.serializers import ProductListSerializer
+from django.contrib.auth import authenticate
 
 
 class AddressSerializer(serializers.ModelSerializer):
@@ -117,6 +118,32 @@ class OTPVerifySerializer(OTPVerificationBaseSerializer):
         return user
 
 
+class PasswordLoginSerializer(serializers.Serializer):
+    """
+    Serializer for logging in users using phone number and password.
+
+    Authenticates the user and checks if the account is active.
+    Raises validation errors for incorrect credentials or inactive accounts.
+    """
+    phone = serializers.CharField(validators=[phone_regex], required=True)
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        phone = data.get("phone")
+        password = data.get("password")
+
+        user = authenticate(phone=phone, password=password)
+
+        if not user:
+            raise serializers.ValidationError({'User Error': 'phone or password is incorrect'})
+
+        if not user.is_active:
+            raise serializers.ValidationError({'User Error': 'User account is inactive'})
+
+        data['user'] = user
+        return data
+
+
 class ResetPasswordSerializer(OTPVerificationBaseSerializer):
     """
     Serializer for resetting a user's password using OTP verification.
@@ -142,6 +169,43 @@ class ResetPasswordSerializer(OTPVerificationBaseSerializer):
             raise serializers.ValidationError({'Error': 'invalid old password'})
 
         return data
+
+    def save(self):
+        user = self.get_user(self.validated_data)
+
+        user.set_password(self.validated_data["new_password"])  # hashed password and set for current user
+        user.save()
+        self.otp_verification.delete()  # Removed the used otp
+        return user
+
+
+class ForgotPasswordSerializer(OTPVerificationBaseSerializer):
+    """
+    Serializer for resetting a forgotten password using phone number and OTP.
+
+    Validates the OTP, checks the new password and its confirmation, and updates the user's password.
+    Raises validation errors if passwords don't match or if the user doesn't exist.
+    """
+
+    new_password = serializers.CharField(required=True, write_only=True)
+    confirm_password = serializers.CharField(required=True, write_only=True)
+
+    def validate(self, data):
+        data = super().validate(data)
+
+        password_validation.validate_password(data.get('new_password'))  # validate provided new password
+
+        if data.get('confirm_password') != data.get('new_password'):
+            raise serializers.ValidationError({'confirm_password': 'Passwords do not match'})
+
+        return data
+
+    def get_user(self, data):
+        try:
+            user = CustomUser.objects.get(phone=data.get('phone'))
+        except CustomUser.DoesNotExist:
+            raise serializers.ValidationError({'Error': 'user does not exist'})
+        return user
 
     def save(self):
         user = self.get_user(self.validated_data)

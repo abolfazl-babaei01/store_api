@@ -12,9 +12,10 @@ urlpatterns = [
     path('jwt/create/', TokenObtainPairView.as_view(), name='jwt_create'),
     path('jwt/refresh/', TokenRefreshView.as_view(), name='jwt_refresh'),
 
-    # Auth (OTP)
+    # Auth (OTP + Password)
     path('auth/otp/request/', views.OTPRequestView.as_view(), name='auth-otp-request'),
     path('auth/otp/verify/', views.OTPVerifyView.as_view(), name='auth-otp-verify'),
+    path('auth/password/login/', views.PasswordLoginView.as_view(), name='auth-password-login'),
 
     # User Profile
     path('profile/', views.UserProfileDetailView.as_view(), name='user-profile-detail'),
@@ -22,6 +23,7 @@ urlpatterns = [
 
     # Password Management
     path('profile/reset-password/', views.ResetPasswordView.as_view(), name='profile-reset-password'),
+    path('forgot-password/', views.ForgotPasswordView.as_view(), name='forgot-password'),
 
     # Phone Number
     path('profile/change-phone/', views.ChangePhoneNumberView.as_view(), name='profile-change-phone'),

@@ -7,11 +7,13 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import (OTPRequestSerializer, OTPVerifySerializer, UserProfileSerializer, ResetPasswordSerializer,
                           ChangePhoneNumberSerializer,
-                          AddressSerializer, FavoriteProductActionSerializer, FavoriteProductListSerializer)
+                          AddressSerializer, FavoriteProductActionSerializer, FavoriteProductListSerializer,
+                          ForgotPasswordSerializer, PasswordLoginSerializer)
 from .models import CustomUser, Address
 
 from products.serializers import ProductCommentListSerializer
 from products.models import Product
+
 
 # Create your views here.
 
@@ -141,17 +143,60 @@ class OTPVerifyView(APIView):
         return Response(self.create_token_response(user))
 
 
+class PasswordLoginView(APIView):
+    """
+    Handle user authentication via phone number and password.
+
+    This endpoint allows registered users to log in by providing their phone number and password.
+    Upon successful authentication, JWT access and refresh tokens will be returned.
+    """
+
+    permission_classes = [AllowAny]
+    serializer_class = PasswordLoginSerializer
+
+    def create_token_response(self, user):
+        refresh = RefreshToken.for_user(user)
+        return {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        return Response(self.create_token_response(user), status=status.HTTP_200_OK)
+
+
 class ResetPasswordView(APIView):
     """
     This View handles POST requests to reset password of a user.
     """
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         serializer = ResetPasswordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response({'message': "password has ben reset successfully"}, status=status.HTTP_200_OK)
+        return Response({'message': "password has ben change successfully"}, status=status.HTTP_200_OK)
+
+
+class ForgotPasswordView(APIView):
+    """
+    Reset a forgotten password using phone number and OTP.
+
+    Users must provide their phone number, a valid OTP code, and a new password.
+    If the OTP is verified, the user's password will be updated.
+    """
+
+    permission_classes = [AllowAny]
+    serializer_class = ForgotPasswordSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({'message': 'password has ben reset successfully.'}, status=status.HTTP_200_OK)
 
 
 class ChangePhoneNumberView(generics.GenericAPIView):
