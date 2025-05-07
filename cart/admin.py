@@ -20,3 +20,7 @@ class CartAdmin(admin.ModelAdmin):
     formated_date.short_description = 'Create Date'
 
     inlines = [CaerItemInline]
+
+@admin.register(CartItem)
+class CartItemAdmin(admin.ModelAdmin):
+    pass

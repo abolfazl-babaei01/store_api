@@ -1,5 +1,5 @@
-from .models import Cart
-from .serializers import (CartSerializer, UpdateCartSerializer)
+from .models import Cart, CartItem
+from .serializers import (CartSerializer, CartItemSerializer, UpdateCartSerializer)
 from rest_framework import viewsets, status, views, permissions
 from rest_framework.response import Response
 
@@ -18,6 +18,12 @@ class CartViewSet(viewsets.ViewSet):
         cart = Cart.objects.filter(user=request.user)
         serializer = CartSerializer(cart, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def retrieve(self, request, pk=None):
+        cart_item = CartItem.objects.get(pk=pk, cart__user_id=request.user.id)
+        serializer = CartItemSerializer(cart_item)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class UpdateCartView(views.APIView):
     """
