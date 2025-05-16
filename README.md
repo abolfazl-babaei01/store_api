@@ -109,3 +109,45 @@ python manage.py runserver
 
 and log in with the credentials you created.
 
+## ⭐ API Examples
+
+**📌 Get All Products:**
+
+**Request:**
+
+```bash
+GET /api/products HTTP/1.1
+Host: 127.0.0.1:8000
+```
+
+**Response:**
+
+```bash
+{
+    "count": 6,
+    "next": "http://127.0.0.1:8000/api/products/?page=2",
+    "previous": null,
+    "results": [
+        {
+            "category": "mobile",
+            "image": "http://127.0.0.1:8000/media/products/images/6d0ac0a28c34c29f7dd3019caef0fdb376afefb2_1664877785.jpg",
+            "name": "mobile nokia 1100",
+            "slug": "mobile-nokia-1100",
+            "description": "mobile nokia 1100 is good",
+            "price": 2000000,
+            "new_price": 2000000,
+            "detail_url": "http://127.0.0.1:8000/api/products/mobile-nokia-1100/"
+        },
+        {
+            "category": "shalvar",
+            "image": "http://127.0.0.1:8000/media/products/images/%D8%B4%D9%84%D9%88%D8%A7%D8%B1.png",
+            "name": "shalvar",
+            "slug": "shalvar_mardaneh",
+            "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been",
+            "price": 900,
+            "new_price": 900,
+            "detail_url": "http://127.0.0.1:8000/api/products/shalvar_mardaneh/"
+        }
+    ]
+}
+```
